@@ -1,0 +1,10 @@
+int i = 0;
+clock x;
+
+template A {
+	locations start, end
+	initial location start
+	edge from start to end [true] {i := i + 1;} : i < 4;
+	edge from end to start [true && false] {i += 1;} : i < 3;
+}
+

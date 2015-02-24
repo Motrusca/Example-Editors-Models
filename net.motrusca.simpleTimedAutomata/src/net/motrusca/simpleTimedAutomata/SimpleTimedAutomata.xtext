@@ -1,9 +1,119 @@
 grammar net.motrusca.simpleTimedAutomata.SimpleTimedAutomata with org.eclipse.xtext.common.Terminals
 
-generate simpleTimedAutomata "http://www.motrusca.net/simpleTimedAutomata/SimpleTimedAutomata"
+generate simpleTimedAutomata "http://www.motrusca.net/models/simpleTimedAutomata/SimpleTimedAutomata"
 
 Model:
-	greetings+=Greeting*;
+	declarations+=Declaration*
+	templates+=Template+
+	systemDeclarations+=Declaration*
+	;
 	
-Greeting:
-	'Hello' name=ID '!';
+Declaration:
+	type=DataType name=ID ('=' value=IntegerLiteral)? ';'
+;
+
+enum DataType:
+	INT='int' | CLOCK='clock'
+;
+
+Template:
+	'template' name=ID '{'
+		'locations' locations+=Location (',' locations+=Location)*
+		'initial' 'location' initialLocation=[Location]
+		edges+=Edge*
+	'}'
+;
+
+Edge:
+	'edge' 'from' source=[Location] 'to' destination=[Location] 
+		(guard=Guard)?
+		(assignment=AssignmentList)?
+		(invariant=Invariant)?
+//		(synchronisation=Synchronisation)?
+		 ';'
+;
+
+Guard:
+	'[' expression=Expression ']'
+;
+
+Invariant:
+	':' expression=Expression
+;
+
+Literal:
+	BoolLiteral | IntegerLiteral
+;
+
+BoolLiteral:
+	{BoolLiteral} (value?=("true" | "TRUE") | ("false" | "FALSE"))
+;
+
+Primary:
+	Literal 
+	| "(" Expression ")" 
+	| VariableLiteral
+;
+
+Expression:
+	// Allow any expression that has higher precedence than level 1
+	ExpressionLevel1 ((
+		({EqualsExpression.left=current} '==') 
+		| ({NotEqualsExpression.left=current} '!=') 
+		| ({LessThanExpression.left=current} '<') 
+		| ({LessEqualExpression.left=current} '<=') 
+		| ({GreaterThanExpression.left=current} '>') 
+		| ({GreaterEqualExpression.left=current} '>=')) 
+	right=ExpressionLevel1)*
+;
+
+ExpressionLevel1 returns Expression:
+	ExpressionLevel2
+	((
+		({AddExpression.left=current} '+')
+		| ({SubtractExpression.left=current} '-')
+		| ({LogicalAndExpression.left=current} '&&')
+		| ({LogicalOrExpression.left=current} '||'))
+	right=ExpressionLevel2)*
+;
+
+ExpressionLevel2 returns Expression:
+	// Allow any expression that has higher precedence than level 3
+	ExpressionLevel3 ((
+		({MultiplyExpression.left=current} '*') 
+		| ({DivideExpression.left=current} '/') 
+		| ({ModuloExpression.left=current} '%')) 
+	right=ExpressionLevel3)*;
+
+ExpressionLevel3 returns Expression:
+// Allow only expressions basic expressions
+	PrimaryExpression
+;
+
+PrimaryExpression:
+	primary=Primary
+;
+
+IntegerLiteral:
+	value=INT
+;
+
+VariableLiteral:
+	{VariableLiteral} variable=[Declaration]
+;
+
+AssignmentList:
+	'{' assignments+=Assignment '}'
+;
+
+Assignment:
+	variable=[Declaration] operation=Operation value=Expression ';'
+;
+
+enum Operation:
+	INCREMENT='+=' | DECREMENT='-=' | ASSIGNMENT=':='
+;
+
+Location:
+	name=ID 
+;

@@ -11,6 +11,26 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
- org.eclipse.emf.mwe2.launch;resolution:=optional
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.eclipse.xtext.xbase.lib,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types,
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: net.motrusca.simpleTimedAutomata,
+ net.motrusca.simpleTimedAutomata.services,
+ net.motrusca.simpleTimedAutomata.simpleTimedAutomata,
+ net.motrusca.simpleTimedAutomata.simpleTimedAutomata.impl,
+ net.motrusca.simpleTimedAutomata.simpleTimedAutomata.util,
+ net.motrusca.simpleTimedAutomata.serializer,
+ net.motrusca.simpleTimedAutomata.parser.antlr,
+ net.motrusca.simpleTimedAutomata.parser.antlr.internal,
+ net.motrusca.simpleTimedAutomata.validation,
+ net.motrusca.simpleTimedAutomata.scoping,
+ net.motrusca.simpleTimedAutomata.generator,
+ net.motrusca.simpleTimedAutomata.formatting
+
