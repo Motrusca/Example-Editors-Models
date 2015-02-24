@@ -1,0 +1,9 @@
+grammar net.motrusca.simpleTimedAutomata.SimpleTimedAutomata with org.eclipse.xtext.common.Terminals
+
+generate simpleTimedAutomata "http://www.motrusca.net/simpleTimedAutomata/SimpleTimedAutomata"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
